@@ -6,7 +6,7 @@ pro_select = 0
 ac_select = 0
 
 root = Tk()
-root.title('BTS Unifi Heatmap')
+root.title('Unifi Heatmap')
 root.iconbitmap('pics/bts.ico')
 root.geometry('1400x800')
 root.config(bg='#292929')
@@ -81,18 +81,36 @@ def pro_func2(event):
 def donothing():
     pass
 
+def adjust_size(event):
+    global bg1, resized_bg, new_bg, rx, ry, filename
+    rxz, ryz = 620,300  # Crops Image
+
+    rx = int(height_entry.get())
+    ry = int(height_entry.get())
+    bg1 = Image.open(filename)
+    resized_bg = bg1.resize((rx,ry), Image.ANTIALIAS)
+    new_bg = ImageTk.PhotoImage(resized_bg)
+    canvas6.create_image(rxz,ryz,image=new_bg)
+
 def importsite():
+    global filename
     filename = filedialog.askopenfilename(initialdir="C:", title="Select File")
     filetypes=(("executables","*.exe"), ("all files", "*.*"))
     apps.append(filename)
-    
-    global canvas6
-    global photo6
+    #rx, ry = 300,250  # resizes image
+    rxz, ryz = 620,300  # Crops Image
 
+    global canvas6
     canvas6 = Canvas(main_canvas, height=8, width=12, bg='white')
-    photo6 = ImageTk.PhotoImage(file=filename)
-    item6 = canvas6.create_image(1100, 900, image=photo6)
     canvas6.place(relx=.0,rely=.0,relheight=1,relwidth=1)
+    
+    global bg1, resized_bg, new_bg, rx, ry
+    
+    bg1 = Image.open(filename)
+    rx, ry = bg1.size
+    resized_bg = bg1.resize((rx,ry), Image.ANTIALIAS)
+    new_bg = ImageTk.PhotoImage(resized_bg)
+    canvas6.create_image(rxz,ryz,image=new_bg)
 
 
 my_label = Label(root, text='', bg='#292929', fg='white')
@@ -130,5 +148,9 @@ ac_label.place(relx=0.25, rely=0.7)
 
 blankpage = Label(main_canvas, text='Start by importing building floor plans\n Then Select your AP and drag onto the site photo to see the range', font=('helvetica', 15), bg='white')
 blankpage.place(relx=0.32, rely=0.5)
+
+height_entry = Entry(right_canvas, width=4)
+height_entry.bind('<Return>', adjust_size)
+height_entry.place(relx=0.9, rely=.1)
 
 root.mainloop()
