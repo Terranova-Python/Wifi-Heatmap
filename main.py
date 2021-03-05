@@ -4,6 +4,7 @@ from tkinter import filedialog
 
 pro_select = 0
 ac_select = 0
+MRX = 200
 
 root = Tk()
 root.title('Unifi Heatmap')
@@ -39,6 +40,7 @@ def move2(e):
     global img55
 
     img8 = PhotoImage(file='pics/heatmap3.png')
+
     my_image8 = canvas6.create_image(e.x,e.y, image=img8)
 
     img55 = PhotoImage(file='pics/macpro.png')
@@ -46,16 +48,21 @@ def move2(e):
 
     my_label.config(text='Coordinates: x = ' + str(e.x) + ' y = ' + str(e.y))
 
+def pro_wifi_adjust(e):
+    global MRX
+    text_num = height_entry2.get()
+    mrx_num = int(text_num)
+    MRX += mrx_num
+
 def move(e):
     x = 600//2
     y = 400//2
+    global bg2, resized_bg2, new_bg2, img6, MRX
 
-    global img5
-    global img6
-    global count
-
-    img5 = PhotoImage(file='pics/heatmap2.png')
-    my_image2 = canvas6.create_image(e.x,e.y, image=img5)
+    bg2 = Image.open('pics/heatmap2.png')
+    resized_bg2 = bg2.resize((MRX,MRX), Image.ANTIALIAS)
+    new_bg2 = ImageTk.PhotoImage(resized_bg2)
+    canvas6.create_image(e.x,e.y,image=new_bg2)
 
     img6 = PhotoImage(file='pics/macpro.png')
     my_image = canvas6.create_image(e.x,e.y, image=img6)
@@ -80,6 +87,7 @@ def pro_func2(event):
 
 def donothing():
     pass
+
 
 def adjust_size(event):
     global bg1, resized_bg, new_bg, rx, ry, filename
@@ -143,14 +151,18 @@ root.config(menu=menubar)
 acpro_label = Label(right_canvas, text='Unifi AC-AP-PRO', font=('helvetica', 10), bg='#383838', fg='white')
 acpro_label.place(relx=0.02, rely=0.7)
 
-ac_label = Label(right_canvas, text='Unifi AC-AP lite', font=('helvetica', 10), bg='#383838', fg='white')
-ac_label.place(relx=0.25, rely=0.7)
+ac_label = Label(right_canvas, text='Unifi AC-AP-LR', font=('helvetica', 10), bg='#383838', fg='white')
+ac_label.place(relx=0.26, rely=0.7)
 
 blankpage = Label(main_canvas, text='Start by importing building floor plans\n Then Select your AP and drag onto the site photo to see the range', font=('helvetica', 15), bg='white')
-blankpage.place(relx=0.32, rely=0.5)
+blankpage.place(relx=0.33, rely=0.5)
 
 height_entry = Entry(right_canvas, width=4)
 height_entry.bind('<Return>', adjust_size)
 height_entry.place(relx=0.9, rely=.1)
+
+height_entry2 = Entry(right_canvas, width=4)
+height_entry2.bind('<Return>', pro_wifi_adjust)
+height_entry2.place(relx=0.9, rely=.4)
 
 root.mainloop()
