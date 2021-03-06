@@ -1,7 +1,7 @@
 # Wifi-Heatmap
-Analyzes site maps with wifi APs and range details for Unifi AP's. Adjust signal strength and import your own site photos into the program!
+Analyzes sites with wifi APs and range details for Unifi products. Adjust the signal strength and import your own site photos into the program!
 
-Python 3.8.5
+Version created in Python 3.8.5
 
 Dependancies
 Tkinter,
