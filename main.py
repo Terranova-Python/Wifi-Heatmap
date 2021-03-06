@@ -3,8 +3,6 @@ from PIL import ImageTk, Image
 from tkinter import filedialog
 import time
 
-pro_select = 0
-ac_select = 0
 MRX = 200
 MRX2 = 200
 
@@ -17,7 +15,6 @@ root.config(bg='#292929')
 DHEIGHT = 310
 DWIDTH = 210
 
-
 class Fullscreen_Example:
     def __init__(self):
         self.window = tk.Tk()
@@ -28,7 +25,6 @@ class Fullscreen_Example:
 
         self.window.mainloop()
 
-        
 main_canvas = Canvas(root, width=1350, height=600, bg='#262626')
 main_canvas.pack(pady=10)
 
@@ -38,24 +34,52 @@ right_canvas.pack()
 adjust_canvas = Canvas(root, width=250, height=140, bg='#383838')
 adjust_canvas.place(relx=0.75, rely=0.8)
 
-
-def change(e):
-    print('Hover')
-
+def change_pro(e):
     img = Image.open('pics/apicon.png')
     smaller_ap = img.resize((90,62), Image.ANTIALIAS)
     new_small = ImageTk.PhotoImage(smaller_ap)
     imglabel.config(image=new_small)
     imglabel.image = new_small
 
-def changeback(e):
-    print('og')
+def changeback_pro(e):
     img = PhotoImage(file='pics/apicon.png')  # PRO
     imglabel.config(image=img)
     imglabel.image = img
+    
 
-apps = []
+def pro_wifi_adjust():
+    global bg2,resized_bg2, new_bg2, canvas6, pro_ap_locationx, pro_ap_locationy, img6, my_image, MRX
+    mrx_amount = vertical_wifi.get()
 
+    if MRX <= 650:
+        MRX += mrx_amount
+        bg2 = Image.open('pics/heatmap2.png')
+        resized_bg2 = bg2.resize((MRX,MRX), Image.ANTIALIAS)
+        new_bg2 = ImageTk.PhotoImage(resized_bg2)
+        canvas6.create_image(pro_ap_locationx,pro_ap_locationy,image=new_bg2)
+        img6 = PhotoImage(file='pics/macpro.png')
+        my_image = canvas6.create_image(pro_ap_locationx, pro_ap_locationy, image=img6)
+
+    else:
+        pass
+
+
+def lr_wifi_size():
+    global bg3,resized_bg3, new_bg3, canvas6, lt_location, lt_location2, img7, my_image, MRX2
+    mrx_amount = vertical_lr_wifi.get()
+
+    if MRX2 <= 650:
+        MRX2 += mrx_amount
+        bg3 = Image.open('pics/heatmap2.png')
+        resized_bg3 = bg3.resize((MRX2,MRX2), Image.ANTIALIAS)
+        new_bg3 = ImageTk.PhotoImage(resized_bg3)
+        canvas6.create_image(lt_location,lt_location2,image=new_bg3)
+
+        img7 = PhotoImage(file='pics/macpro.png')
+        my_image = canvas6.create_image(lt_location, lt_location2, image=img7)
+
+    else:
+        pass
 
 def move2(e):
     x = 600//2
@@ -75,48 +99,10 @@ def move2(e):
     my_label.config(text='Coordinates: x = ' + str(e.x) + ' y = ' + str(e.y))
 
 
-def pro_wifi_adjust():
-    global MRX
-    mrx_amount = vertical_wifi.get()
-    print(MRX, mrx_amount)
-
-    if MRX <= 650:
-        MRX += mrx_amount
-        global bg2,resized_bg2, new_bg2, canvas6, pro_ap_locationx, pro_ap_locationy, img6, my_image
-        bg2 = Image.open('pics/heatmap2.png')
-        resized_bg2 = bg2.resize((MRX,MRX), Image.ANTIALIAS)
-        new_bg2 = ImageTk.PhotoImage(resized_bg2)
-        canvas6.create_image(pro_ap_locationx,pro_ap_locationy,image=new_bg2)
-
-        img6 = PhotoImage(file='pics/macpro.png')
-        my_image = canvas6.create_image(pro_ap_locationx, pro_ap_locationy, image=img6)
-
-    else:
-        pass
-
-def lr_wifi_size():
-    global MRX
-    mrx_amount = vertical_lr_wifi.get()
-    print(MRX, mrx_amount)
-
-    if MRX <= 650:
-        MRX += mrx_amount
-        global bg3,resized_bg3, new_bg3, canvas6, lt_location, lt_location2, img7, my_image
-        bg3 = Image.open('pics/heatmap2.png')
-        resized_bg3 = bg3.resize((MRX,MRX), Image.ANTIALIAS)
-        new_bg3 = ImageTk.PhotoImage(resized_bg3)
-        canvas6.create_image(lt_location,lt_location2,image=new_bg3)
-
-        img7 = PhotoImage(file='pics/macpro.png')
-        my_image = canvas6.create_image(lt_location, lt_location2, image=img7)
-
-    else:
-        pass
-
 def move(e):
+    global bg2, resized_bg2, new_bg2, img6, MRX, pro_ap_locationx, pro_ap_locationy
     x = 600//2
     y = 400//2
-    global bg2, resized_bg2, new_bg2, img6, MRX, pro_ap_locationx, pro_ap_locationy
     pro_ap_locationx = e.x
     pro_ap_locationy = e.y
 
@@ -127,28 +113,18 @@ def move(e):
 
     img6 = PhotoImage(file='pics/macpro.png')
     my_image = canvas6.create_image(e.x,e.y, image=img6)
+
     my_label.config(text='Coordinates: x = ' + str(e.x) + ' y = ' + str(e.y))
 
-    
+
 def pro_func(event):
-    global pro_select
-    pro_select += 1
+    canvas6.bind('<B1-Motion>', move)
 
-    if pro_select >= 1:
-        canvas6.bind('<B1-Motion>', move)
-
-        
 def pro_func2(event):
-    global pro_select
-    pro_select += 1
+    canvas6.bind('<B1-Motion>', move2)
 
-    if pro_select >= 1:
-        canvas6.bind('<B1-Motion>', move2)
-
-        
 def donothing():
     pass
-
 
 def adjust_size():   #nMap size
     global bg1, resized_bg, new_bg, rx, ry, filename
@@ -161,20 +137,16 @@ def adjust_size():   #nMap size
     new_bg = ImageTk.PhotoImage(resized_bg)
     canvas6.create_image(rxz,ryz,image=new_bg)
 
-    
+
 def importsite():
-    global filename
+    global filename, canvas6, bg1, resized_bg, new_bg, rx, ry
     filename = filedialog.askopenfilename(initialdir="C:", title="Select File")
     filetypes=(("executables","*.exe"), ("all files", "*.*"))
-    apps.append(filename)
     rxz, ryz = 620,300  # Crops Image
 
-    global canvas6
     canvas6 = Canvas(main_canvas, height=8, width=12, bg='#262626')
     canvas6.place(relx=.0,rely=.0,relheight=1,relwidth=1)
-    
-    global bg1, resized_bg, new_bg, rx, ry
-    
+
     bg1 = Image.open(filename)
     rx, ry = bg1.size
     resized_bg = bg1.resize((rx,ry), Image.ANTIALIAS)
@@ -187,8 +159,8 @@ my_label.pack(side='bottom')
 img = PhotoImage(file='pics/apicon.png')  # PRO
 imglabel = Label(right_canvas, image=img, bg='#383838')
 imglabel.bind('<Button-1>', pro_func)
-imglabel.bind('<Enter>', change)
-imglabel.bind('<Leave>', changeback)
+imglabel.bind('<Enter>', change_pro)
+imglabel.bind('<Leave>', changeback_pro)
 imglabel.place(relx=0.03, rely=0.13)
 
 img2 = PhotoImage(file='pics/macpro.png')   # LITE
@@ -227,7 +199,6 @@ ap_lr_wifi.place(relx=0.54, rely=.79)
 
 Wifi_adjust_button = Button(adjust_canvas, text=' Apply ', command=pro_wifi_adjust)
 Wifi_adjust_button.place(relx=0.745, rely=.79)
-
 
 vertical_wifi = Scale(adjust_canvas, from_= 50, to=-50)
 vertical_wifi.place(relx=0.75, rely=.05)
