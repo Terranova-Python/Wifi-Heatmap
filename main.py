@@ -28,8 +28,11 @@ class Fullscreen_Example:
 main_canvas = Canvas(root, width=1350, height=600, bg='white')
 main_canvas.pack(pady=10)
 
-right_canvas = Canvas(root, width=600, height=120, bg='#383838')
+right_canvas = Canvas(root, width=600, height=140, bg='#383838')
 right_canvas.pack()
+
+adjust_canvas = Canvas(root, width=250, height=140, bg='#383838')
+adjust_canvas.place(relx=0.75, rely=0.8)
 
 apps = []
 def move2(e):
@@ -48,11 +51,10 @@ def move2(e):
 
     my_label.config(text='Coordinates: x = ' + str(e.x) + ' y = ' + str(e.y))
 
-def pro_wifi_adjust(e):
+def pro_wifi_adjust():
     global MRX
-    text_num = height_entry2.get()
-    mrx_num = int(text_num)
-    MRX += mrx_num
+    mrx_amount = vertical_wifi.get()
+    MRX += mrx_amount
 
 def move(e):
     x = 600//2
@@ -77,7 +79,6 @@ def pro_func(event):
     if pro_select >= 1:
         canvas6.bind('<B1-Motion>', move)
 
-
 def pro_func2(event):
     global pro_select
     pro_select += 1
@@ -87,7 +88,6 @@ def pro_func2(event):
 
 def donothing():
     pass
-
 
 def adjust_size(event):
     global bg1, resized_bg, new_bg, rx, ry, filename
@@ -155,14 +155,19 @@ ac_label = Label(right_canvas, text='Unifi AC-AP-LR', font=('helvetica', 10), bg
 ac_label.place(relx=0.26, rely=0.7)
 
 blankpage = Label(main_canvas, text='Start by importing building floor plans\n Then Select your AP and drag onto the site photo to see the range', font=('helvetica', 15), bg='white')
-blankpage.place(relx=0.33, rely=0.5)
+blankpage.place(relx=0.27, rely=0.5)
 
-height_entry = Entry(right_canvas, width=4)
+height_entry = Entry(adjust_canvas, width=4)  #Replace with a button
 height_entry.bind('<Return>', adjust_size)
-height_entry.place(relx=0.9, rely=.1)
+height_entry.place(relx=0.6, rely=.79)
 
-height_entry2 = Entry(right_canvas, width=4)
-height_entry2.bind('<Return>', pro_wifi_adjust)
-height_entry2.place(relx=0.9, rely=.4)
+Wifi_adjust_button = Button(adjust_canvas, text=' Apply ', command=pro_wifi_adjust)
+Wifi_adjust_button.place(relx=0.755, rely=.79)
+
+vertical_wifi = Scale(adjust_canvas, from_= 200, to=-200)
+vertical_wifi.place(relx=0.75, rely=.05)
+
+vertical_maps = Scale(adjust_canvas, from_= 200, to=-200)
+vertical_maps.place(relx=0.52, rely=.05)
 
 root.mainloop()
