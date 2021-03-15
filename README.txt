@@ -3,9 +3,11 @@ Analyzes sites with wifi APs and range details for Unifi products. Adjust the si
 
 Version created in Python 3.8.5
 
-Dependancies
-Tkinter,
+Dependancies:
+Tkinter
 Pillow (PIL)
+Scapy
+argparse
 
 How to use:
 Close repository or:
