@@ -24,15 +24,6 @@ PBLUE = '#01255c'
 RGRAY = '#292929'
 OWHITE = '#d4d4d4'
 
-class Fullscreen_Example:
-    def __init__(self):
-        self.window = tk.Tk()
-        self.window.attributes('-fullscreen', True)  
-        self.fullScreenState = False
-        self.window.bind("<F11>", self.toggleFullScreen)
-        self.window.bind("<Escape>", self.quitFullScreen)
-        self.window.mainloop()
-
 
 def change_pro(e):
     img = Image.open('pics/apicon.png')
@@ -187,7 +178,7 @@ def scan_ip(event):
             client_list.append(client_dict)
         
         return client_list
-        
+
 
     def print_result(scan_list):
         result_head = "IP\t\tMAC\n---------------------------------"
