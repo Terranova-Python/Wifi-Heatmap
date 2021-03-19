@@ -189,7 +189,7 @@ def scan_ip(event):
                 scan_results = client["ip"] + "\t\t" + client["mac"]
                 T2.insert('end', scan_results + '\n')
 
-                if '04:4e:5a' in client['mac']:   # Check condition - If Mac contains x, highlight the line that that Mac is on...
+                if '04:18:d6' in client['mac']:   # Check condition - If Mac contains x, highlight the line that that Mac is on...
                     c_l = scan_list.index(client) + 3
                     start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
                     T2.tag_add('start', start_cl, end_cl)
