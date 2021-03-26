@@ -179,7 +179,7 @@ def adjust_size(event):   # nmap size
 
     event_list.append(int(event))
 
-    rxz, ryz = 620,300
+    rxz, ryz = 675,300
 
     bg1 = Image.open(filename)
 
@@ -207,7 +207,7 @@ def importsite():
     global filename, canvas6, bg1, resized_bg, new_bg, rx, ry
     filename = filedialog.askopenfilename(initialdir="C:", title="Select File")
     filetypes=(("executables","*.exe"), ("all files", "*.*"))
-    rxz, ryz = 620,300  # Crops Image
+    rxz, ryz = 675,300  # Crops Image
 
     canvas6 = Canvas(main_canvas, height=8, width=12, bg=DGRAY)
     canvas6.place(relx=.0,rely=.0,relheight=1,relwidth=1)
