@@ -8,6 +8,7 @@ Tkinter
 Pillow (PIL)
 Scapy
 argparse
+OpenCV
 
 How to use:
 Close repository or:
