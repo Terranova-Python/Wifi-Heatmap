@@ -4,15 +4,17 @@ from tkinter import filedialog
 import scapy.all as scapy
 import re
 import argparse
+import cv2
+import numpy as np 
 
 MRX = 200
 MRX2 = 200
 
 root = Tk()
-root.title('Unifi Heatmap')
+root.title('Heatwave | Version 1.0.0')
 root.iconbitmap('pics/heatmapicon.ico')
 root.geometry('1400x800')
-root.config(bg='#292929')
+root.config(bg='#1F1F1F')
 
 DHEIGHT = 310
 DWIDTH = 210
@@ -24,19 +26,42 @@ PBLUE = '#01255c'
 RGRAY = '#292929'
 OWHITE = '#d4d4d4'
 
-
 def change_pro(e):
     img = Image.open('pics/apicon.png')
-    smaller_ap = img.resize((90,62), Image.ANTIALIAS)
+    smaller_ap = img.resize((95,65), Image.ANTIALIAS)
     new_small = ImageTk.PhotoImage(smaller_ap)
     imglabel.config(image=new_small)
     imglabel.image = new_small
-
 
 def changeback_pro(e):
     img = PhotoImage(file='pics/apicon.png')  # PRO
     imglabel.config(image=img)
     imglabel.image = img
+
+def change_lr(e):
+    img2 = Image.open('pics/macpro.png')
+    smaller_ap2 = img2.resize((55,38), Image.ANTIALIAS)
+    new_small2 = ImageTk.PhotoImage(smaller_ap2)
+    imglabel2.config(image=new_small2)
+    imglabel2.image = new_small2
+
+def changeback_lr(e):
+    img2 = PhotoImage(file='pics/macpro.png')  # PRO
+    imglabel2.config(image=img2)
+    imglabel2.image = img2
+
+
+def change_ubg(e):
+    img3 = Image.open('pics/UWB-XG.png')
+    smaller_ap3 = img3.resize((93,85), Image.ANTIALIAS)
+    new_small3 = ImageTk.PhotoImage(smaller_ap3)
+    imglabel3.config(image=new_small3)
+    imglabel3.image = new_small3
+
+def changeback_ubg(e):
+    img3 = PhotoImage(file='pics/UWB-XG.png')  # PRO
+    imglabel3.config(image=img3)
+    imglabel3.image = img3
 
 
 def pro_wifi_adjust():
@@ -54,7 +79,6 @@ def pro_wifi_adjust():
 
     else:
         pass
-
 
 def lr_wifi_size():
     global bg3,resized_bg3, new_bg3, canvas6, lt_location, lt_location2, img7, my_image, MRX2
@@ -125,24 +149,55 @@ def move(e):
 
 
 def pro_func(event):
+    global gg, green_glow
     canvas6.bind('<B1-Motion>', move)
+    gg = PhotoImage(file='pics/dot.png')  # PRO
+    green_glow = Label(right_canvas, image=gg, bg=LGRAY)
+    green_glow.place(relx=0.084, rely=0.65)
 
 def pro_func2(event):
+    global gg, green_glow
     canvas6.bind('<B1-Motion>', move2)
+    gg = PhotoImage(file='pics/dot.png')  # PRO
+    green_glow = Label(right_canvas, image=gg, bg=LGRAY)
+    green_glow.place(relx=0.302, rely=0.65)
 
 def pro_func3(event):
+    global gg, green_glow
     canvas6.bind('<B1-Motion>', move3)
+    gg = PhotoImage(file='pics/dot.png')  # PRO
+    green_glow = Label(right_canvas, image=gg, bg=LGRAY)
+    green_glow.place(relx=0.54, rely=0.65)
 
 def donothing():
     pass
 
-def adjust_size():   #nMap size
-    global bg1, resized_bg, new_bg, rx, ry, filename
-    rxz, ryz = 620,300  # Crops Image
 
-    rx = int(vertical_maps.get()) + 100
-    ry = int(vertical_maps.get())
+event_list = [0,0,0]
+def adjust_size(event):   # nmap size
+    global bg1, resized_bg, new_bg, rx, ry, filename
+
+    event_list.append(int(event))
+
+    rxz, ryz = 620,300
+
     bg1 = Image.open(filename)
+
+    max_threshold = 1000        # Set the max threshold of an image
+
+    e = event_list[-1]
+    pe = event_list[-2]
+
+    if e > pe:       # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
+        rx += 40
+        ry += 25
+    if e < pe:     # if the last value added is more than the previous, then increase
+        rx -= 40
+        ry -= 25
+
+    if len(event_list) >= 3:
+        event_list.pop(0)
+
     resized_bg = bg1.resize((rx,ry), Image.ANTIALIAS)
     new_bg = ImageTk.PhotoImage(resized_bg)
     canvas6.create_image(rxz,ryz,image=new_bg)
@@ -177,7 +232,7 @@ def scan_ip(event):
             client_dict = {"ip": element[1].psrc, "mac": element[1].hwsrc}
             client_list.append(client_dict)
         
-        return client_list
+        return client_list 
 
 
     def print_result(scan_list):
@@ -189,7 +244,7 @@ def scan_ip(event):
                 scan_results = client["ip"] + "\t\t" + client["mac"]
                 T2.insert('end', scan_results + '\n')
 
-                if '04:18:d6' in client['mac']:   # Check condition - If Mac contains x, highlight the line that that Mac is on...
+                if '04:4e:5a' in client['mac']:   # Check condition - If Mac contains x, highlight the line that that Mac is on...
                     c_l = scan_list.index(client) + 3
                     start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
                     T2.tag_add('start', start_cl, end_cl)
@@ -202,6 +257,42 @@ def scan_ip(event):
 
     result_list = scan(ip_entry.get())
     print_result(result_list)
+
+
+def start_vis():
+    global filename
+    img = cv2.imread(filename)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # detect edges
+    edges = cv2.Canny(gray, 150, 300)
+
+    lines = cv2.HoughLinesP(
+        edges,
+        rho=1.0,
+        theta=np.pi/180,
+        threshold=20,
+        minLineLength=30,
+        maxLineGap=10        
+    )
+
+    # draw lines
+    line_img = np.zeros((img.shape[0], img.shape[1], 3), dtype=np.uint8)
+    line_color = [0, 255, 0]
+    line_thickness = 2
+    dot_color = [0, 255, 0]
+    dot_size = 3
+
+    for line in lines:
+        for x1, y1, x2, y2 in line:
+            cv2.line(line_img, (x1, y1), (x2, y2), line_color, line_thickness)
+            cv2.circle(line_img, (x1, y1), dot_size, dot_color, -1)
+            cv2.circle(line_img, (x2, y2), dot_size, dot_color, -1)
+
+    overlay = cv2.addWeighted(img, 0.8, line_img, 1.0, 0.0)
+    cv2.imshow("Overlay", overlay)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
 
 
 main_canvas = Canvas(root, width=1350, height=600, bg=DGRAY)
@@ -222,6 +313,7 @@ ip_label.place(relx=0.61, rely=0.0115)
 msg = StringVar()  
 T2 = Text(ip_canvas, bg=PBLUE, fg='white')
 T2.place(relx=0.005, rely=0.13, relheight=0.9, relwidth=0.989)
+T2.insert('end', '^ Scan a subnet or Single\nIP Address. APs will be\nHighlighted in Green')
 
 img = PhotoImage(file='pics/apicon.png')  # PRO
 imglabel = Label(right_canvas, image=img, bg=LGRAY)
@@ -233,17 +325,21 @@ imglabel.place(relx=0.03, rely=0.13)
 img2 = PhotoImage(file='pics/macpro.png')   # LITE
 imglabel2 = Label(right_canvas, image=img2, bg=LGRAY)
 imglabel2.bind('<Button-1>', pro_func2)
+imglabel2.bind('<Enter>', change_lr)
+imglabel2.bind('<Leave>', changeback_lr)
 imglabel2.place(relx=0.28, rely=0.26)
 
 img3 = PhotoImage(file='pics/UWB-XG.png')   # UWB-XG
 imglabel3 = Label(right_canvas, image=img3, bg=LGRAY)
 imglabel3.bind('<Button-1>', pro_func3)
-imglabel3.place(relx=0.48, rely=0.13)
+imglabel3.bind('<Enter>', change_ubg)
+imglabel3.bind('<Leave>', changeback_ubg)
+imglabel3.place(relx=0.48, rely=0.1)
 
 menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Import", command=importsite)
-filemenu.add_command(label="save", command=donothing)
+filemenu.add_command(label="Visualize", command=start_vis)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=root.quit)
 menubar.add_cascade(label="File", menu=filemenu)
@@ -254,17 +350,17 @@ menubar.add_cascade(label="Help", menu=helpmenu)
 
 root.config(menu=menubar)
 
-acpro_label = Label(right_canvas, text='Unifi AC-AP-PRO', font=('helvetica', 10), bg=LGRAY, fg='white')
-acpro_label.place(relx=0.02, rely=0.7)
+acpro_label = Label(right_canvas, text='Unifi AC-AP-PRO', font=('helvetica', 8), bg=LGRAY, fg='white')
+acpro_label.place(relx=0.04, rely=0.012)
 
-ac_label = Label(right_canvas, text='Unifi AC-AP-LR', font=('helvetica', 10), bg=LGRAY, fg='white')
-ac_label.place(relx=0.26, rely=0.7)
+ac_label = Label(right_canvas, text='Unifi AC-AP-LR', font=('helvetica', 8), bg=LGRAY, fg='white')
+ac_label.place(relx=0.26, rely=0.012)
+
+unifi_uwb_label = Label(right_canvas, text='Unifi UWB-XG-US', font=('helvetica', 8), bg=LGRAY, fg='white')
+unifi_uwb_label.place(relx=0.49, rely=0.012)
 
 blankpage = Label(main_canvas, text='Start by importing building floor plans\n Then Select your AP and drag onto the site photo to see the range', font=('helvetica', 15), fg='white', bg=DGRAY)
-blankpage.place(relx=0.27, rely=0.5)
-
-height_entry = Button(adjust_canvas, text=' Apply ', command=adjust_size)
-height_entry.place(relx=0.315, rely=.79)
+blankpage.place(relx=0.29, rely=0.5)
 
 ap_lr_wifi = Button(adjust_canvas, text=' Apply ', command=lr_wifi_size)
 ap_lr_wifi.place(relx=0.54, rely=.79)
@@ -282,7 +378,7 @@ vertical_wifi.place(relx=0.75, rely=.05)
 vertical_lr_wifi = Scale(adjust_canvas, from_= 50, to=-50)
 vertical_lr_wifi.place(relx=0.549, rely=.05)
 
-vertical_maps = Scale(adjust_canvas, from_= 600, to=400)
+vertical_maps = Scale(adjust_canvas, command=adjust_size, from_=20, to=-20)
 vertical_maps.place(relx=0.32, rely=.05)
 
 root.mainloop()
