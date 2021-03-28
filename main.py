@@ -14,7 +14,7 @@ CANVW, CANVH = 675,300
 
 root = Tk()
 root.title('Heatwave | Version 1.0.0 | Terranova Technology')
-root.iconbitmap('pics/heatmapicon.ico')
+root.iconbitmap('heatmapicon.ico')
 root.geometry('1400x800')
 root.config(bg='#1F1F1F')
 
@@ -65,13 +65,10 @@ def uwb_wifi_adjust(event):
     global bg5,resized_bg5, new_bg5, canvas6, uwb_location, uwb_location2, img5, my_image, MRX3
 
     uwb_list.append(int(event))
-
-
     e4 = uwb_list[-1]
     pe4 = uwb_list[-2]
     if e4 > pe4:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
         MRX3 += 10
-
     if e4 < pe4:          # if the last value added is more than the previous, then increase
         MRX3 -= 10
 
@@ -257,80 +254,23 @@ def scan_ip(event):
         T2.insert('end', result_head + '\n')
 
         if scan_list:
+            ap_mac_list = ['00:15:6D','00:1B:67','00:1B:67','00:27:22','00:15:6D','00:1B:67',
+                            '00:27:22','04:18:D6','24:A4:3C','68:72:51','6C:5E:7A','9C:B0:08',
+                            'DC:9F:DB','04:4e:5a']
+
             for client in scan_list:
                 scan_results = client["ip"] + "\t\t" + client["mac"]
                 T2.insert('end', scan_results + '\n')
 
-                if '00:15:6D' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '00:1B:67' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '00:1B:67' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '00:27:22' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '00:15:6D' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '00:1B:67' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '00:27:22' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '04:18:D6' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '24:A4:3C' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '68:72:51' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '6C:5E:7A' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '9C:B0:08' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif 'DC:9F:DB' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
-                elif '04:' in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                    c_l = scan_list.index(client) + 3
-                    start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
-                    T2.tag_add('start', start_cl, end_cl)
-                    T2.tag_configure('start', foreground='#40c773')
+                for mac_id in ap_mac_list:
+                    if mac_id in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
+                        c_l = scan_list.index(client) + 3
+                        start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
+                        T2.tag_add('start', start_cl, end_cl)
+                        T2.tag_configure('start', foreground='#40c773')
+                else:
+                    pass
+
         else:
             T2.insert('end', 'No Results!\nCheck subnet format, or scan again.')
             T2.tag_add("start", "3.0", "4.35")
