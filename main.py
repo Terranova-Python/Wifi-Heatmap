@@ -11,20 +11,28 @@ import webbrowser
 
 MRX, MRX2, MRX3 = 250, 250, 250       # static Sizes of Wifi frequency
 CANVW, CANVH = 675,300
+DGRAY, LGRAY, PBLUE, OWHITE = '#262626', '#383838', '#01255c', '#d4d4d4'
 
 root = Tk()
 root.title('Heatwave | Version 1.0.1 | Terranova Technology')
 root.iconbitmap('heatmapicon.ico')
-main_width = "1400"
-main_height = "800"
-root.geometry(f'{main_width}x{main_height}')
+root.geometry('1400x800')
 root.config(bg='#1F1F1F')
 
-###### COLORS FOR USE ######
-DGRAY = '#262626'
-LGRAY = '#383838'
-PBLUE = '#01255c'
-OWHITE = '#d4d4d4'
+
+def change_other(e):
+    imgot = Image.open('pics/otherrouter.png')
+    smaller_ap_ot = imgot.resize((66,66), Image.ANTIALIAS)
+    new_small_ot = ImageTk.PhotoImage(smaller_ap_ot)
+    imglabel4.config(image=new_small_ot)
+    imglabel4.image = new_small_ot
+
+def changeback_other(e):
+    imgot = Image.open('pics/otherrouter.png')
+    smaller_ap_ot = imgot.resize((70,70), Image.ANTIALIAS)
+    new_small_ot = ImageTk.PhotoImage(smaller_ap_ot)
+    imglabel4.config(image=new_small_ot)
+    imglabel4.image = new_small_ot
 
 def change_pro(e):
     img = Image.open('pics/apicon.png')
@@ -67,6 +75,7 @@ uwb_selected = 0                                        # checks to see which AP
 lr_selected = 0
 pro_selected = 0
 
+
 uwb_list = [0,0,0]                                      # Controller to see if scale is ascending or decending
 lr_eifi_list = [0,0,0]
 pro_list = [0,0,0]
@@ -77,7 +86,6 @@ def wifi_range_adjust(event):                           # Controller for the wif
         e3 = pro_list[-1]
         pe3 = pro_list[-2]
 
-        
         if e3 > pe3 and e3 != 0:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
             MRX += 10
         if e3 < pe3 and e3 != 0:          # if the last value added is more than the previous, then increase
@@ -263,7 +271,7 @@ def importsite():
     filetypes=(("executables","*.exe"), ("all files", "*.*"))
     rxz, ryz = CANVW,CANVH                                      # Places cropping image in center of screen (half of the main_canvas size x,y)
 
-    canvas6 = Canvas(main_canvas, height=9, width=13, bg=DGRAY)
+    canvas6 = Canvas(main_canvas, height=8, width=12, bg=DGRAY)
     canvas6.place(relx=.0,rely=.0,relheight=1,relwidth=1)
 
     bg1 = Image.open(filename)
@@ -324,7 +332,7 @@ def start_vis():
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # detect edges
-    edges = cv2.Canny(gray, 60, 300)
+    edges = cv2.Canny(gray, 150, 300)
 
     lines = cv2.HoughLinesP(
         edges,
@@ -358,11 +366,18 @@ def save_canvas():
 
 def clear_canvas():
     canvas6.delete("all")
-    blankpage = Label(main_canvas, text='Start by importing building floor plans\n Then Select your AP and drag onto the site photo to see the range', font=('helvetica', 15), fg='white', bg=DGRAY)
+    blankpage = Label(main_canvas, text='Start by importing building floor plans\n Then Select your AP and drag onto the site photo to see the range', font=('helvetica', 12), fg='white', bg=DGRAY)
     blankpage.place(relx=0.29, rely=0.5)
 
 def bugreport():
     webbrowser.open('https://www.terranovatechnology.com/bug-report-lkjbo7960ogbnug869hbubub')
+
+def other_router(event):
+    # Toplevel object which will 
+    # be treated as a new window
+    newWindow = Toplevel(root)
+    newWindow.title("Other routers")
+    newWindow.geometry("200x400")
 
 main_canvas = Canvas(root, width=1350, height=600, bg=DGRAY)
 main_canvas.pack(pady=10)
@@ -404,6 +419,15 @@ imglabel3.bind('<Button-1>', pro_func3)
 imglabel3.bind('<Enter>', change_ubg)
 imglabel3.bind('<Leave>', changeback_ubg)
 imglabel3.place(relx=0.48, rely=0.1)
+
+imgot = Image.open('pics/otherrouter.png')
+smaller_ap_ot = imgot.resize((70,70), Image.ANTIALIAS)
+new_small_ot = ImageTk.PhotoImage(smaller_ap_ot)
+imglabel4 = Label(right_canvas, image=new_small_ot, bg=LGRAY)
+imglabel4.bind('<Button-1>', other_router)
+imglabel4.bind('<Enter>', change_other)
+imglabel4.bind('<Leave>', changeback_other)
+imglabel4.place(relx=0.78, rely=0.13)
 
 menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
