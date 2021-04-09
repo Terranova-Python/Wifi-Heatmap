@@ -14,11 +14,10 @@ CANVW, CANVH = 675,300
 DGRAY, LGRAY, PBLUE, OWHITE = '#262626', '#383838', '#01255c', '#d4d4d4'
 
 root = Tk()
-root.title('Heatwave | Version 1.0.1 | Terranova Technology')
+root.title('Heatwave | Version 1.1.0 | Terranova Technology')
 root.iconbitmap('heatmapicon.ico')
 root.geometry('1400x800')
 root.config(bg='#1F1F1F')
-
 
 def change_other(e):
     imgot = Image.open('pics/otherrouter.png')
@@ -372,12 +371,39 @@ def clear_canvas():
 def bugreport():
     webbrowser.open('https://www.terranovatechnology.com/bug-report-lkjbo7960ogbnug869hbubub')
 
+
 def other_router(event):
-    # Toplevel object which will 
-    # be treated as a new window
-    newWindow = Toplevel(root)
-    newWindow.title("Other routers")
-    newWindow.geometry("200x400")
+    class ScrollBar:
+        def __init__(self):
+            global other_ap, other_ap_pic, or_canvas, op, op2, op3, op4, resized_op, resized_op2, new_op, new_op2
+            other_router_window = Toplevel(root)
+            other_router_window.title("Other routers")
+            other_router_window.geometry("250x500")
+            other_router_window.config(bg=DGRAY)
+
+            v = Scrollbar(other_router_window)
+            v.pack(side = RIGHT, fill = Y)
+
+            or_canvas = Canvas(other_router_window, height=500, width=300, bg=DGRAY)
+            or_canvas.pack(pady=5)
+
+            op = Image.open('pics/wallpro.png')
+            resized_op = op.resize((80,80), Image.ANTIALIAS)
+            new_op = ImageTk.PhotoImage(resized_op)
+            other_ap_pic = Label(or_canvas, image=new_op, bg=DGRAY)
+            #other_ap_pic.bind('<Button-1>', pro_func)
+            other_ap_pic.grid(row=0, column=0)
+
+            op2 = Image.open('pics/UAP-LR.png') 
+            resized_op2 = op2.resize((80,60), Image.ANTIALIAS)
+            new_op2 = ImageTk.PhotoImage(resized_op2)
+            other_ap_pic2 = Label(or_canvas, image=new_op2, bg=DGRAY)
+            #other_ap_pic2.bind('<Button-1>', pro_func)
+            other_ap_pic2.grid(row=1, column=0)
+
+
+    s = ScrollBar()
+
 
 main_canvas = Canvas(root, width=1350, height=600, bg=DGRAY)
 main_canvas.pack(pady=10)
