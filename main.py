@@ -13,9 +13,11 @@ MRX, MRX2, MRX3 = 250, 250, 250       # static Sizes of Wifi frequency
 CANVW, CANVH = 675,300
 
 root = Tk()
-root.title('Heatwave | Version 1.0.0 | Terranova Technology')
+root.title('Heatwave | Version 1.0.1 | Terranova Technology')
 root.iconbitmap('heatmapicon.ico')
-root.geometry('1400x800')
+main_width = "1400"
+main_height = "800"
+root.geometry(f'{main_width}x{main_height}')
 root.config(bg='#1F1F1F')
 
 ###### COLORS FOR USE ######
@@ -50,7 +52,7 @@ def changeback_lr(e):
 
 def change_ubg(e):
     img3 = Image.open('pics/UWB-XG.png')
-    smaller_ap3 = img3.resize((93,85), Image.ANTIALIAS)
+    smaller_ap3 = img3.resize((95,89), Image.ANTIALIAS)
     new_small3 = ImageTk.PhotoImage(smaller_ap3)
     imglabel3.config(image=new_small3)
     imglabel3.image = new_small3
@@ -60,71 +62,78 @@ def changeback_ubg(e):
     imglabel3.config(image=img3)
     imglabel3.image = img3
 
-uwb_list = [0,0,0]
-def uwb_wifi_adjust(event):
-    global bg5,resized_bg5, new_bg5, canvas6, uwb_location, uwb_location2, img5, my_image, MRX3
+global uwb_selected, lr_selected, pro_selected
+uwb_selected = 0                                        # checks to see which AP is currently selected
+lr_selected = 0
+pro_selected = 0
 
-    uwb_list.append(int(event))
-    e4 = uwb_list[-1]
-    pe4 = uwb_list[-2]
-    if e4 > pe4:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
-        MRX3 += 10
-    if e4 < pe4:          # if the last value added is more than the previous, then increase
-        MRX3 -= 10
-
-    if len(uwb_list) >= 3:
-        uwb_list.pop(0)
-
-    bg5 = Image.open('pics/heatmap2.png')
-    resized_bg5 = bg5.resize((MRX3,MRX3), Image.ANTIALIAS)
-    new_bg5 = ImageTk.PhotoImage(resized_bg5)
-    canvas6.create_image(uwb_location,uwb_location2,image=new_bg5)
-    img5 = PhotoImage(file='pics/UWB-XG.png')
-    my_image = canvas6.create_image(uwb_location, uwb_location2, image=img5)
-
-pro_list = [0,0,0]
-def pro_wifi_adjust(event):
-    global bg2,resized_bg2, new_bg2, canvas6, pro_ap_locationx, pro_ap_locationy, img6, my_image, MRX
-
-    pro_list.append(int(event))
-
-    e3 = pro_list[-1]
-    pe3 = pro_list[-2]
-    if e3 > pe3:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
-        MRX += 10
-    if e3 < pe3:          # if the last value added is more than the previous, then increase
-        MRX -= 10
-    if len(pro_list) >= 3:
-        pro_list.pop(0)
-
-    bg2 = Image.open('pics/heatmap2.png')
-    resized_bg2 = bg2.resize((MRX,MRX), Image.ANTIALIAS)
-    new_bg2 = ImageTk.PhotoImage(resized_bg2)
-    canvas6.create_image(pro_ap_locationx,pro_ap_locationy,image=new_bg2)
-    img6 = PhotoImage(file='pics/macpro.png')
-    my_image = canvas6.create_image(pro_ap_locationx, pro_ap_locationy, image=img6)
-
+uwb_list = [0,0,0]                                      # Controller to see if scale is ascending or decending
 lr_eifi_list = [0,0,0]
-def lr_wifi_size(event):
-    global bg3,resized_bg3, new_bg3, canvas6, lt_location, lt_location2, img7, my_image, MRX2
+pro_list = [0,0,0]
+def wifi_range_adjust(event):                           # Controller for the wifi range adjustments
+    if pro_selected >= 1:
+        global bg2,resized_bg2, new_bg2, canvas6, pro_ap_locationx, pro_ap_locationy, img6, my_image, MRX
+        pro_list.append(int(event))
+        e3 = pro_list[-1]
+        pe3 = pro_list[-2]
 
-    lr_eifi_list.append(int(event))
+        
+        if e3 > pe3 and e3 != 0:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
+            MRX += 10
+        if e3 < pe3 and e3 != 0:          # if the last value added is more than the previous, then increase
+            MRX -= 10
+        if len(pro_list) >= 3:
+            pro_list.pop(0)
 
-    e2 = lr_eifi_list[-1]
-    pe2 = lr_eifi_list[-2]
-    if e2 > pe2:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
-        MRX2 += 10
-    if e2 < pe2:          # if the last value added is more than the previous, then increase
-        MRX2 -= 10
-    if len(event_list) >= 3:
-        event_list.pop(0)
+        bg2 = Image.open('pics/heatmap2.png')
+        resized_bg2 = bg2.resize((MRX,MRX), Image.ANTIALIAS)
+        new_bg2 = ImageTk.PhotoImage(resized_bg2)
+        canvas6.create_image(pro_ap_locationx,pro_ap_locationy,image=new_bg2)
+        img6 = PhotoImage(file='pics/macpro.png')
+        my_image = canvas6.create_image(pro_ap_locationx, pro_ap_locationy, image=img6)
 
-    bg3 = Image.open('pics/heatmap2.png')
-    resized_bg3 = bg3.resize((MRX2,MRX2), Image.ANTIALIAS)
-    new_bg3 = ImageTk.PhotoImage(resized_bg3)
-    canvas6.create_image(lt_location,lt_location2,image=new_bg3)
-    img7 = PhotoImage(file='pics/macpro.png')
-    my_image = canvas6.create_image(lt_location, lt_location2, image=img7)
+    if lr_selected >= 1:
+        global bg3,resized_bg3, new_bg3, lt_location, lt_location2, img7, MRX2
+
+        lr_eifi_list.append(int(event))
+
+        e2 = lr_eifi_list[-1]
+        pe2 = lr_eifi_list[-2]
+        if e2 > pe2 and e2 != 0:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
+            MRX2 += 10
+        if e2 < pe2 and e2 != 0:          # if the last value added is more than the previous, then increase
+            MRX2 -= 10
+        if len(event_list) >= 3:
+            event_list.pop(0)
+
+        bg3 = Image.open('pics/heatmap2.png')
+        resized_bg3 = bg3.resize((MRX2,MRX2), Image.ANTIALIAS)
+        new_bg3 = ImageTk.PhotoImage(resized_bg3)
+        canvas6.create_image(lt_location,lt_location2,image=new_bg3)
+        img7 = PhotoImage(file='pics/macpro.png')
+        my_image = canvas6.create_image(lt_location, lt_location2, image=img7)
+
+    if uwb_selected >=1:
+        global bg5,resized_bg5, new_bg5, uwb_location, uwb_location2, img5, MRX3
+
+        uwb_list.append(int(event))
+        e4 = uwb_list[-1]
+        pe4 = uwb_list[-2]
+        if e4 > pe4 and e4 != 0:          # if the last value added is more than the previous, then increase the amount of rx, ry to add to the pic
+            MRX3 += 10
+        if e4 < pe4 and e4 != 0:          # if the last value added is more than the previous, then increase
+            MRX3 -= 10
+
+        if len(uwb_list) >= 3:
+            uwb_list.pop(0)
+
+        bg5 = Image.open('pics/heatmap2.png')
+        resized_bg5 = bg5.resize((MRX3,MRX3), Image.ANTIALIAS)
+        new_bg5 = ImageTk.PhotoImage(resized_bg5)
+        canvas6.create_image(uwb_location,uwb_location2,image=new_bg5)
+        img5 = PhotoImage(file='pics/UWB-XG.png')
+        my_image = canvas6.create_image(uwb_location, uwb_location2, image=img5)
+
 
 event_list = [0,0,0]
 def adjust_size(event):                                         # map size
@@ -194,26 +203,56 @@ def move(e):                                                                # PR
     img6 = PhotoImage(file='pics/macpro.png')
     my_image = canvas6.create_image(e.x,e.y, image=img6)
 
-def pro_func(event):                                            # PRO
-    global gg, green_glow
+def pro_func(event):    
+    vertical_wifi.set(0)                                        # PRO
+    global gg, green_glow, pro_selected, lr_selected, uwb_selected
     canvas6.bind('<B1-Motion>', move)
     gg = PhotoImage(file='pics/dot.png') 
     green_glow = Label(right_canvas, image=gg, bg=LGRAY)
     green_glow.place(relx=0.084, rely=0.65)
+    
+    if pro_selected < 1:
+        pro_selected += 1
 
-def pro_func2(event):                                           # LR
-    global gg, green_glow
+    if lr_selected ==1:
+        lr_selected -= 1
+
+    if uwb_selected == 1:
+        uwb_selected -= 1
+
+def pro_func2(event):  
+    vertical_wifi.set(0)                                         # LR
+    global gg, green_glow, lr_selected, pro_selected, uwb_selected
     canvas6.bind('<B1-Motion>', move2)
     gg = PhotoImage(file='pics/dot.png')
     green_glow = Label(right_canvas, image=gg, bg=LGRAY)
     green_glow.place(relx=0.302, rely=0.65)
+    
+    if lr_selected < 1:
+        lr_selected += 1
 
-def pro_func3(event):                                           # UWB
-    global gg, green_glow
+    if pro_selected ==1:
+        pro_selected -= 1
+
+    if uwb_selected == 1:
+        uwb_selected -= 1
+
+def pro_func3(event):  
+    vertical_wifi.set(0)                                         # UWB
+    global gg, green_glow, uwb_selected, pro_selected, lr_selected
     canvas6.bind('<B1-Motion>', move3)
     gg = PhotoImage(file='pics/dot.png')
     green_glow = Label(right_canvas, image=gg, bg=LGRAY)
     green_glow.place(relx=0.54, rely=0.65)
+    
+    if uwb_selected < 1:
+        uwb_selected += 1
+
+    if pro_selected == 1:
+        pro_selected -= 1
+
+    if lr_selected == 1:
+        lr_selected -= 1
 
 def info():
     webbrowser.open('https://www.terranovatechnology.com/heatwave-s6hd5g1hdgeyd6hfg5h41d6fs')
@@ -224,7 +263,7 @@ def importsite():
     filetypes=(("executables","*.exe"), ("all files", "*.*"))
     rxz, ryz = CANVW,CANVH                                      # Places cropping image in center of screen (half of the main_canvas size x,y)
 
-    canvas6 = Canvas(main_canvas, height=8, width=12, bg=DGRAY)
+    canvas6 = Canvas(main_canvas, height=9, width=13, bg=DGRAY)
     canvas6.place(relx=.0,rely=.0,relheight=1,relwidth=1)
 
     bg1 = Image.open(filename)
@@ -247,14 +286,14 @@ def scan_ip(event):
             client_dict = {"ip": element[1].psrc, "mac": element[1].hwsrc}
             client_list.append(client_dict)
         
-        return client_list 
+        return client_list
 
     def print_result(scan_list):
         result_head = "IP\t\tMAC\n---------------------------------"
         T2.insert('end', result_head + '\n')
 
         if scan_list:
-            ap_mac_list = ['00:15:6D','00:1B:67','00:1B:67','00:27:22','00:15:6D','00:1B:67',
+            unifi_mac_list = ['00:15:6D','00:1B:67','00:1B:67','00:27:22','00:15:6D','00:1B:67',
                             '00:27:22','04:18:D6','24:A4:3C','68:72:51','6C:5E:7A','9C:B0:08',
                             'DC:9F:DB','04:4e:5a']
 
@@ -262,14 +301,14 @@ def scan_ip(event):
                 scan_results = client["ip"] + "\t\t" + client["mac"]
                 T2.insert('end', scan_results + '\n')
 
-                for mac_id in ap_mac_list:
+                for mac_id in unifi_mac_list:
                     if mac_id in client['mac']:             # Check condition - If Mac contains x, highlight the line that that Mac is on...
-                        c_l = scan_list.index(client) + 3
+                        c_l = scan_list.index(client) + 3   # Maybe add in a descriptor? Ex: 10.0.0.1 -- MAC -- (unifi) etc.
                         start_cl, end_cl = str(c_l) + ".0" , str(c_l) + ".40"
                         T2.tag_add('start', start_cl, end_cl)
                         T2.tag_configure('start', foreground='#40c773')
-                else:
-                    pass
+                    else:
+                        pass
 
         else:
             T2.insert('end', 'No Results!\nCheck subnet format, or scan again.')
@@ -285,7 +324,7 @@ def start_vis():
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # detect edges
-    edges = cv2.Canny(gray, 150, 300)
+    edges = cv2.Canny(gray, 60, 300)
 
     lines = cv2.HoughLinesP(
         edges,
@@ -329,10 +368,10 @@ main_canvas = Canvas(root, width=1350, height=600, bg=DGRAY)
 main_canvas.pack(pady=10)
 
 right_canvas = Canvas(root, width=600, height=140, bg=LGRAY)
-right_canvas.place(relx=0.3, rely=0.8)
+right_canvas.place(relx=0.32, rely=0.8)
 
 adjust_canvas = Canvas(root, width=200, height=120, bg=LGRAY)
-adjust_canvas.place(relx=0.76, rely=0.8)
+adjust_canvas.place(relx=0.8, rely=0.8)
 
 ip_canvas = Canvas(root, width=300, height=140, bg=LGRAY)
 ip_canvas.place(relx=0.08, rely=0.8)
@@ -343,7 +382,7 @@ ip_label.place(relx=0.61, rely=0.0114)
 msg = StringVar()  
 T2 = Text(ip_canvas, bg=PBLUE, fg='white')
 T2.place(relx=0.005, rely=0.13, relheight=0.86, relwidth=0.989)
-T2.insert('end', '^ Scan a subnet or Single\nIP Address. Unifi APs may be\nHighlighted in Green')
+T2.insert('end', '^ Scan a subnet or Single\nIP Address. Unifi APs may be\nHighlighted in Green\n\nNeed Nmap?\nhttps://nmap.org/download.html')
 
 img = PhotoImage(file='pics/apicon.png')  # PRO
 imglabel = Label(right_canvas, image=img, bg=LGRAY)
@@ -393,6 +432,9 @@ ac_label.place(relx=0.26, rely=0.012)
 unifi_uwb_label = Label(right_canvas, text='Unifi UWB-XG-US', font=('helvetica', 8), bg=LGRAY, fg='white')
 unifi_uwb_label.place(relx=0.49, rely=0.012)
 
+other_label = Label(right_canvas, text='Other Routers', font=('helvetica', 8), bg=LGRAY, fg='white')
+other_label.place(relx=0.78, rely=0.012)
+
 blankpage = Label(main_canvas, text='Start by importing building floor plans\n Then Select your AP and drag onto the site photo to see the range', font=('helvetica', 15), fg='white', bg=DGRAY)
 blankpage.place(relx=0.29, rely=0.5)
 
@@ -403,19 +445,13 @@ ip_entry.place(relx=0.001, rely=.001)
 vert_label = Label(adjust_canvas,text='-Scaling Options-', font=('helvetica', 8), bg=LGRAY, fg='white')
 vert_label.pack(side = TOP)
 
-vert_label2 = Label(adjust_canvas,text='Pro                LR               UWB            Map', font=('helvetica', 7), bg=LGRAY, fg='white')
+vert_label2 = Label(adjust_canvas,text='Range            Map', font=('helvetica', 7), bg=LGRAY, fg='white')
 vert_label2.pack(side = BOTTOM)
 
-vertical_wifi = Scale(adjust_canvas,width=10,length=100,command=pro_wifi_adjust, highlightbackground=DGRAY, to= -50, from_=50)  # PRO AP SCALE
+vertical_wifi = Scale(adjust_canvas,width=10,length=100,command=wifi_range_adjust, highlightbackground=DGRAY, to= -80, from_=80)  # PRO AP SCALE
 vertical_wifi.pack(side = LEFT,padx=10)
 
-vertical_lr_wifi = Scale(adjust_canvas,width=10,length=100,command=lr_wifi_size,highlightbackground=DGRAY, to= -50, from_=50)   # LR AP SCALE
-vertical_lr_wifi.pack(side = LEFT,padx=10)
-
-uwb_wifi = Scale(adjust_canvas,width=10,length=100,command=uwb_wifi_adjust, highlightbackground=DGRAY, to= -50, from_=50)                        # UWB AP SCALE
-uwb_wifi.pack(side = LEFT,padx=10)
-
-vertical_maps = Scale(adjust_canvas, width=10,length=100,command=adjust_size,highlightbackground=DGRAY, from_=20, to=-20)       # MAP SCALE
+vertical_maps = Scale(adjust_canvas, width=10,length=100,command=adjust_size,highlightbackground=DGRAY, from_=40, to=-40)       # MAP SCALE
 vertical_maps.pack(side=LEFT, padx=10)
 
 root.mainloop()
